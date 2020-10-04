@@ -1,0 +1,67 @@
+version: "3.7"
+services:
+  php-fpm:
+    build: 
+      context: ./docker/php
+    volumes:
+      - "./:/var/www"
+
+
+  # for phpunit test from PHPStorm
+  php-cli:
+    build: 
+      context: ./docker/php-cli
+
+
+  nginx:
+    build: 
+      context: ./docker/nginx
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/sites/:/etc/nginx/sites-available
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d
+    depends_on:
+      - php-fpm
+      - pgsql
+    ports:
+      - "8080:80"
+      - "443:443"
+
+  pgsql:
+    image: postgres:latest
+    container_name: pgsql
+    restart: always
+    environment:
+      POSTGRES_DB: lara
+      POSTGRES_USER: lara
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 6060:8080
+
+  redis:
+    image: redis:alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+     - "6379:6379"
+
+  composer:
+    image: composer:latest
+    volumes: 
+      - ./:/var/www
+    working_dir: /var/www
+    command: composer install
+
+  node:
+    image: node:latest
+    volumes: 
+      - ./:/var/www
+    working_dir: /var/www
+    command: npm install
