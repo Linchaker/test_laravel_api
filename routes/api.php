@@ -18,3 +18,7 @@ use App\Http\Resources\UserResource;
  * user api
  */
 Route::apiResource('/users', 'Api\v1\UserController')->only('index');
+/**
+ * user-comments api
+ */
+Route::apiResource('/user-comments', 'Api\v1\UserCommentController')->only('show');
