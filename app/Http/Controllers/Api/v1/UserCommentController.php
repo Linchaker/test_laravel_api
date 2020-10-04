@@ -14,7 +14,7 @@ class UserCommentController extends Controller
      */
     public function show($user_id)
     {
-        return new CommentResource(Comment::getCommentsByUser($user_id));
+        return CommentResource::collection(Comment::getCommentsByUser($user_id));
     }
 
 }

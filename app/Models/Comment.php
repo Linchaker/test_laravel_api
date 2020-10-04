@@ -13,18 +13,19 @@ class Comment extends Model
 
     public function user()
     {
-        $this->belongsTo('App\Models\User');
+        return $this->belongsToMany('App\Models\User', 'commentator_id');
     }
 
-    public function post()
+    public function posts()
     {
-        $this->belongsTo('App\Models\Post');
+        return $this->belongsTo('App\Models\Post', 'post_id');
     }
 
     // todo задача 7.1
     public static function getCommentsByUser($user_id)
     {
 
+        // first query
         $comments = DB::SELECT('
                          SELECT com.* FROM comments as com
                          JOIN posts ON posts.id = com.post_id
@@ -35,6 +36,23 @@ class Comment extends Model
 
         );
 
+        // todo задача 7.2
+        $comments = Comment::withTrashed()
+            ->with(["posts" => function($query) {
+                $query->whereNotNull('posts.image_id');
+            }])
+            ->select('comments.*')
+            ->where('comments.commentator_id', $user_id)
+            ->from('comments')
+            ->latest()
+            ->get();
+
+
+        foreach ($comments as $comment) {
+            if ($comment->posts !== null) {
+                $comment->load('posts.image');
+            }
+        }
 
 
         return $comments;
