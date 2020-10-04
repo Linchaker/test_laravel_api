@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     /**
+     * // todo задача 6
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -19,6 +20,7 @@ class UserController extends Controller
 
         $data = User::where('active', true)->get();
 
+        // todo задача 6.1
         if ($limit > 0) {
             $data = $data->map(function($feed) use ($limit) {
                 return $feed->setRelation('posts', $feed->posts->take($limit));

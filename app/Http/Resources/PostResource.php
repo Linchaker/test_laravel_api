@@ -19,6 +19,7 @@ class PostResource extends JsonResource
             'content' => $this->content,
             'created_at_ts' => $this->created_at->timestamp,
             'image_url' => $this->image->url,
+            // todo задача 6.2
             'count_of_comments' => $this->comments->count(),
         ];
     }
