@@ -54,4 +54,26 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Comment', 'commentator_id');
     }
+
+    public static function getUsersWithPosts(int $limit)
+    {
+        $data = User::
+            with(["posts" => function($query) {
+                // todo задач 6.3
+                $query->withCount('comments')->orderBy('comments_count', 'desc')->get();
+            }])
+            ->select('users.*')
+            ->where('users.active', true)
+            ->from('users')
+            ->get();
+
+        // todo задача 6.1
+        if ($limit > 0) {
+            $data = $data->map(function($feed) use ($limit) {
+                return $feed->setRelation('posts', $feed->posts->take($limit));
+            });
+        }
+
+        return $data;
+    }
 }
