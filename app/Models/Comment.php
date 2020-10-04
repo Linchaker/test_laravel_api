@@ -27,13 +27,15 @@ class Comment extends Model
 
         $comments = DB::SELECT('
                          SELECT com.* FROM comments as com
-                         LEFT JOIN posts ON posts.id = com.post_id
+                         JOIN posts ON posts.id = com.post_id
                          WHERE posts.image_id IS NOT NULL
                             AND com.commentator_id = ?
                          ORDER BY com.created_at DESC',
                         [$user_id]
 
         );
+
+
 
         return $comments;
     }
