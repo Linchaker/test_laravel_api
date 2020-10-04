@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Resources\UserResource;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+/**
+ * user api
+ */
+Route::apiResource('/users', 'Api\v1\UserController')->only('index');
+/**
+ * user-comments api
+ */
+Route::apiResource('/user-comments', 'Api\v1\UserCommentController')->only('show');
