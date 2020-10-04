@@ -20,7 +20,8 @@ class CommentResource extends JsonResource
             'commentator_id' => $this->commentator_id,
             'content' => $this->content,
             'created_at_ts' => $this->created_at->timestamp,
-            'posts' => (new PostResource($this->posts)),
+            // todo задача 7.2.1
+            'posts' => (new CommentPostResource($this->posts)),
         ];
     }
 }
