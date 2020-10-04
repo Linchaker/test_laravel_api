@@ -21,8 +21,7 @@ class UserController extends Controller
 
         if ($limit > 0) {
             $data = $data->map(function($feed) use ($limit) {
-                $feed->setRelation('posts', $feed->posts->take($limit));
-                return $feed;
+                return $feed->setRelation('posts', $feed->posts->take($limit));
             });
         }
 
